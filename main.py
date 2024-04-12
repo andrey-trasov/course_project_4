@@ -1,6 +1,10 @@
 from src.head_hunter_api import HeadHunterAPI
 from src.vacancies import Vacancy
-from src.utils import sort_by_salary
+from src.utils import filter_by_salary, sorted_by_salary
+import os
+from config import ROOT_DIR
+from src.json_file import JSONWorker
+from src.functions import Functions
 
 
 
@@ -9,29 +13,90 @@ def main():
     hh_api = HeadHunterAPI()
 
     # Получение вакансий с hh.ru в формате JSON
-#    hh_vacancies = hh_api.load_vacancies(input('Введите поисковый запрос: '))
-
-    #
-    hh_vacancies = hh_api.load_vacancies("python")        #удалить ////////////////////////
-    #
+    hh_vacancies = hh_api.load_vacancies(Functions.request())
 
     # Преобразование набора данных из JSON в список объектов
     vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
 
     while True:
+        print('Кнопки управления:\n'
+              '1 - вывести вакансии в терминал\n'
+              '2 - отфильтровать вакансии по ключевым словам\n'
+              '3 - отфильтровать вакансии по З/П\n'
+              '4 - сортировать вакансии по убыванию З/П\n'
+              '5 - отсортировать топ N вакансий\n'
+              '6 - сохранить информацию о вакансиях в файл\n'
+              '7 - считатать данные из файла\n'
+              '8 - удалить аданные в файле\n'
+              '"stop" или "стоп" закончить работу\n')
+        answer = input()
+        if answer == "стоп" or answer == "stop":
+            break
+        try:
+            answer = int(answer)
+            if 1 <= answer <= 8:    #печатает вакансии в терминал
+                if answer == 1:
+                    for i in vacancies_list:
+                        print(i)
+
+                elif answer == 2:    #фильтрует вакансии по ключевым словам
+                     vacancies_list = Functions.similar_vacancies(vacancies_list)
+
+                elif answer == 3:  # фильтрует вакансии по з/п
+                    vacancies_list = filter_by_salary(vacancies_list)
+
+                elif answer == 4:  # сортирует вакансии по убыванию З/П
+                    vacancies_list = sorted_by_salary(vacancies_list)
+                    print('\nВакансии отсортированы\n')
+
+                elif answer == 5:  # отсортирует топ N вакансий
+                    Functions.top_vacancies(vacancies_list)
+
+                elif answer == 6:  # сохраняет информацию о вакансиях в файл
+                    file_name = input('Введите название файла для сохранения данных: (Пример: file )')
+                    file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
+                    json_saver = JSONWorker(file_path)
+                    json_saver.write_vacancies(vacancies_list)
+
+                elif answer == 7:  # считатываает данные из файла
+                    file_name = input('Введите название файла для считывания данные из файла: (Пример: file )')
+                    file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
+                    json_saver = JSONWorker(file_path)
+                    vacancies_list = json_saver.read_vacancies()
+
+                elif answer == 8:  # удаляет информацию о вакансиях из файла
+                    file_name = input('Введите название файла для удаления данных: (Пример: file )')
+                    file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
+                    json_saver = JSONWorker(file_path)
+                    json_saver.delete_vacancies()
 
 
 
-        #
-        # salary_range = input("Введите диапазон зарплат: (Пример: 100000 - 150000)")  #сортирует вакансии по диапазону зарплат
-        # vacancies_list = sort_by_salary(vacancies_list, salary_range)
-        #
+
+            else:
+                print(f"Введите цифру от 1 до 8\n")
 
 
 
 
 
-        break
+        except ValueError:
+            print(f"Введите цифру от 1 до 8\n")
+
+
+
+    # file_name = input('Введите название файла для сохранения данных: ')
+    # file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
+    # jsonsaver = JSONWorker(file_path)
+
+    # # записать данные в файл
+    # jsonsaver.write_vacancies(vacancies_list)
+
+    # # #считать данные из файла
+    # vacancies_list = jsonsaver.read_vacancies()
+
+    # #удаляем информацию о вакансиях из файла
+    # jsonsaver.delete_vacancies()
 
 
 
@@ -41,30 +106,41 @@ def main():
 
 
 
-    # # Пример работы контструктора класса с одной вакансией
-    # vacancy = Vacancy("Python Developer", "", "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")
-    #
-    # # Сохранение информации о вакансиях в файл
-    # json_saver = JSONSaver()
-    # json_saver.add_vacancy(vacancy)
-    # json_saver.delete_vacancy(vacancy)
-    #
-    # # Функция для взаимодействия с пользователем
-    # def user_interaction():
-    #     platforms = ["HeadHunter"]
 
-    #     top_n = int(input("Введите количество вакансий для вывода в топ N: "))
-    #     filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
 
-    #
-    #     filtered_vacancies = filter_vacancies(vacancies_list, filter_words)
-    #
-    #     ranged_vacancies = get_vacancies_by_salary(filtered_vacancies, salary_range)
-    #
-    #     sorted_vacancies = sort_vacancies(ranged_vacancies)
-    #     top_vacancies = get_top_vacancies(sorted_vacancies, top_n)
-    #     print_vacancies(top_vacancies)
+
+
+
+
+
+
+
+
+
+
+
+        # break
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+    #вывести вакансии по ключевым словам
+    # vacancies_list = Functions.similar_vacancies(vacancies_list)
