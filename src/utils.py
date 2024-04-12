@@ -26,9 +26,6 @@ def filter_by_salary(vacancies_list):
     return sorted_list
 
 
-# def sorted_by_salary(vacancies_list):
-#     new_list = sorted(vacancies_list, key=lambda x: x.salary_for_filtering, reverse=True)
-#     return new_list
 def sorted_by_salary(vacancies):
     """
     сортировка вакансий по зарплате
