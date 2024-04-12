@@ -70,77 +70,12 @@ def main():
                     json_saver = JSONWorker(file_path)
                     json_saver.delete_vacancies()
 
-
-
-
             else:
                 print(f"Введите цифру от 1 до 8\n")
-
-
-
-
 
         except ValueError:
             print(f"Введите цифру от 1 до 8\n")
 
 
-
-    # file_name = input('Введите название файла для сохранения данных: ')
-    # file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
-    # jsonsaver = JSONWorker(file_path)
-
-    # # записать данные в файл
-    # jsonsaver.write_vacancies(vacancies_list)
-
-    # # #считать данные из файла
-    # vacancies_list = jsonsaver.read_vacancies()
-
-    # #удаляем информацию о вакансиях из файла
-    # jsonsaver.delete_vacancies()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # break
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
-    #вывести вакансии по ключевым словам
-    # vacancies_list = Functions.similar_vacancies(vacancies_list)
