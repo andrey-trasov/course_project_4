@@ -1,8 +1,3 @@
-
-
-
-
-
 def filter_by_salary(vacancies_list):
     """
     Фильтруем зарплаты по диапазону

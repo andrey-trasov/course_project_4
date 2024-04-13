@@ -7,7 +7,6 @@ from src.json_file import JSONWorker
 from src.functions import Functions
 
 
-
 def main():
     # Создание экземпляра класса для работы с API сайтов с вакансиями
     hh_api = HeadHunterAPI()

@@ -1,6 +1,3 @@
-
-
-
 class Vacancy:
     def __init__(self, name, url, salary, currency, requirement, responsibility):
         self.name = name    #название вакансии
