@@ -1,6 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 from src.vacancies import Vacancy
+from src.utils import filter_by_salary
 
 class FileWorker(ABC):
 
@@ -18,6 +19,10 @@ class FileWorker(ABC):
 
     @abstractmethod
     def delete_vacancies(self):
+        pass
+
+    @abstractmethod
+    def delete_salary_vacancies(self):
         pass
 
 
@@ -39,6 +44,7 @@ class JSONWorker(FileWorker):
             for vacancy in vacancies:
                 for_add.append(vacancy.__dict__)
             json.dump(for_add, file, ensure_ascii=False, indent=4)
+        print("\nвакансии сихранены в файл\n")
 
     def read_vacancies(self):
         """
@@ -56,6 +62,24 @@ class JSONWorker(FileWorker):
         with open(self.path, 'w', encoding='utf-8') as file:
             # json.dump('', file, ensure_ascii=False, indent=4)
             file.truncate(0)
+
+    def delete_salary_vacancies(self):
+        """
+        удаляет вакансии которые не соответстуют выбранному диапазону зарплат
+        """
+        with open(self.path, "r", encoding='utf-8') as file:
+            new_list = json.load(file)
+            vacancies = Vacancy.vacancies_from_file(new_list)
+
+        sorted_vacancies = filter_by_salary(vacancies)
+
+        with open(self.path, 'w', encoding='utf-8') as file:
+            for_add = []
+            for vacancy in sorted_vacancies:
+                for_add.append(vacancy.__dict__)
+            json.dump(for_add, file, ensure_ascii=False, indent=4)
+        print("\nВакансии не соответствующие выбранной зарплате удалены из файла\n")
+
 
 
 

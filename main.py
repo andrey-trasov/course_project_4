@@ -26,14 +26,15 @@ def main():
               '5 - отсортировать топ N вакансий\n'
               '6 - сохранить информацию о вакансиях в файл\n'
               '7 - считатать данные из файла\n'
-              '8 - удалить аданные в файле\n'
+              '8 - удалить все данные в файле\n'
+              '9 - удалить вакансии из файла не соответствующие выбранной зарплате\n'
               '"stop" или "стоп" закончить работу\n')
         answer = input()
         if answer == "стоп" or answer == "stop":
             break
         try:
             answer = int(answer)
-            if 1 <= answer <= 8:    #печатает вакансии в терминал
+            if 1 <= answer <= 9:    #печатает вакансии в терминал
                 if answer == 1:
                     for i in vacancies_list:
                         print(i)
@@ -69,11 +70,17 @@ def main():
                     json_saver = JSONWorker(file_path)
                     json_saver.delete_vacancies()
 
+                elif answer == 9:  # считатываает данные из файла
+                    file_name = input('Введите название файла для удаления вакансий не соответствующих выбранной зарплате: (Пример: file )')
+                    file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
+                    json_saver = JSONWorker(file_path)
+                    vacancies_list = json_saver.delete_salary_vacancies()
+
             else:
-                print(f"Введите цифру от 1 до 8\n")
+                print(f"Введите цифру от 1 до 9\n")
 
         except ValueError:
-            print(f"Введите цифру от 1 до 8\n")
+            print(f"Введите цифру от 1 до 9\n")
 
 
 if __name__ == "__main__":
